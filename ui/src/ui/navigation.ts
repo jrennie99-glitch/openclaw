@@ -7,6 +7,7 @@ export const TAB_GROUPS = [
     tabs: ["overview", "channels", "instances", "sessions", "usage", "cron"],
   },
   { label: "Agent", tabs: ["agents", "skills", "nodes"] },
+  { label: "Tools", tabs: ["vision"] },
   { label: "Settings", tabs: ["config", "debug", "logs"] },
 ] as const;
 
@@ -23,7 +24,8 @@ export type Tab =
   | "chat"
   | "config"
   | "debug"
-  | "logs";
+  | "logs"
+  | "vision";
 
 const TAB_PATHS: Record<Tab, string> = {
   agents: "/agents",
@@ -39,6 +41,7 @@ const TAB_PATHS: Record<Tab, string> = {
   config: "/config",
   debug: "/debug",
   logs: "/logs",
+  vision: "/vision",
 };
 
 const PATH_TO_TAB = new Map(Object.entries(TAB_PATHS).map(([tab, path]) => [path, tab as Tab]));
@@ -144,6 +147,8 @@ export function iconForTab(tab: Tab): IconName {
       return "zap";
     case "nodes":
       return "monitor";
+    case "vision":
+      return "camera";
     case "config":
       return "settings";
     case "debug":
@@ -177,6 +182,8 @@ export function titleForTab(tab: Tab) {
       return "Nodes";
     case "chat":
       return "Chat";
+    case "vision":
+      return "Vision";
     case "config":
       return "Config";
     case "debug":
@@ -210,6 +217,8 @@ export function subtitleForTab(tab: Tab) {
       return "Paired devices, capabilities, and command exposure.";
     case "chat":
       return "Direct gateway chat session for quick interventions.";
+    case "vision":
+      return "Camera capture and image analysis with AI vision models.";
     case "config":
       return "Edit ~/.openclaw/openclaw.json safely.";
     case "debug":

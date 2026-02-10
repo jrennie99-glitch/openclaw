@@ -45,7 +45,6 @@ import { handleOpenAiHttpRequest } from "./openai-http.js";
 import { handleOpenResponsesHttpRequest } from "./openresponses-http.js";
 import { handleToolsInvokeHttpRequest } from "./tools-invoke-http.js";
 import { handleSsgmApiRequest, initEventStore, type SsgmEventStore } from "../ssgm/index.js";
-import { handleWorkspaceApiRequest } from "../ssgm/workspace/index.js";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 

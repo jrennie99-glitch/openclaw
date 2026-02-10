@@ -13,6 +13,8 @@ export type UiSettings = {
   splitRatio: number; // Sidebar split ratio (0.4 to 0.7, default 0.6)
   navCollapsed: boolean; // Collapsible sidebar state
   navGroupsCollapsed: Record<string, boolean>; // Which nav groups are collapsed
+  // Feature flags
+  CAMERA_ENABLED: boolean; // Enable camera/image analysis feature
 };
 
 export function loadSettings(): UiSettings {
@@ -32,6 +34,7 @@ export function loadSettings(): UiSettings {
     splitRatio: 0.6,
     navCollapsed: false,
     navGroupsCollapsed: {},
+    CAMERA_ENABLED: false, // Disabled by default
   };
 
   try {
@@ -77,6 +80,10 @@ export function loadSettings(): UiSettings {
         typeof parsed.navGroupsCollapsed === "object" && parsed.navGroupsCollapsed !== null
           ? parsed.navGroupsCollapsed
           : defaults.navGroupsCollapsed,
+      CAMERA_ENABLED:
+        typeof parsed.CAMERA_ENABLED === "boolean"
+          ? parsed.CAMERA_ENABLED
+          : defaults.CAMERA_ENABLED,
     };
   } catch {
     return defaults;
