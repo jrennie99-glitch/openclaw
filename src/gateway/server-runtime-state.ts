@@ -13,6 +13,8 @@ import type { GatewayTlsRuntime } from "./server/tls.js";
 import type { GatewayWsClient } from "./server/ws-types.js";
 import { CANVAS_HOST_PATH } from "../canvas-host/a2ui.js";
 import { type CanvasHostHandler, createCanvasHostHandler } from "../canvas-host/server.js";
+import { resolveSsgmDataDir } from "../config/paths.js";
+import { initializeSsgmWorkspace } from "../ssgm/workspace/index.js";
 import { resolveGatewayListenHosts } from "./net.js";
 import { createGatewayBroadcaster } from "./server-broadcast.js";
 import {
@@ -110,6 +112,9 @@ export async function createGatewayRuntimeState(params: {
   const clients = new Set<GatewayWsClient>();
   const { broadcast, broadcastToConnIds } = createGatewayBroadcaster({ clients });
 
+  // Initialize SSGM Workspace tracking
+  initializeSsgmWorkspace();
+
   const handleHooksRequest = createGatewayHooksRequestHandler({
     deps: params.deps,
     getHooksConfig: params.hooksConfig,
@@ -140,6 +145,8 @@ export async function createGatewayRuntimeState(params: {
       handlePluginRequest,
       resolvedAuth: params.resolvedAuth,
       tlsOptions: params.gatewayTls?.enabled ? params.gatewayTls.tlsOptions : undefined,
+      ssgmEnabled: params.cfg.gateway?.ssgm?.enabled ?? false,
+      ssgmDataDir: resolveSsgmDataDir(params.cfg.gateway?.ssgm?.dataDir),
     });
     try {
       await listenGatewayHttpServer({

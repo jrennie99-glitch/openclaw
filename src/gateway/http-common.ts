@@ -30,6 +30,12 @@ export function sendInvalidRequest(res: ServerResponse, message: string) {
   });
 }
 
+export function sendNotFound(res: ServerResponse, message?: string) {
+  sendJson(res, 404, {
+    error: { message: message ?? "Not Found", type: "not_found" },
+  });
+}
+
 export async function readJsonBodyOrError(
   req: IncomingMessage,
   res: ServerResponse,

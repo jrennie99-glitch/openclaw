@@ -211,6 +211,17 @@ export type GatewayNodesConfig = {
   denyCommands?: string[];
 };
 
+export type GatewaySsgmConfig = {
+  /** Enable SSGM (Snapshot/Session Graph Manager) API. Default: false. */
+  enabled?: boolean;
+  /** Directory to store SSGM event data. Default: ~/.openclaw/ssgm. */
+  dataDir?: string;
+  /** Enable data redaction for sensitive fields. Default: true. */
+  redactionEnabled?: boolean;
+  /** Redact file contents in workspace snapshots. Default: false. */
+  redactFileContents?: boolean;
+};
+
 export type GatewayConfig = {
   /** Single multiplexed port for Gateway WS + HTTP (default: 18789). */
   port?: number;
@@ -245,4 +256,6 @@ export type GatewayConfig = {
    * `x-real-ip`) to determine the client IP for local pairing and HTTP checks.
    */
   trustedProxies?: string[];
+  /** SSGM (Snapshot/Session Graph Manager) configuration. */
+  ssgm?: GatewaySsgmConfig;
 };

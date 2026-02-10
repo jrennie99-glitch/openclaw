@@ -233,6 +233,26 @@ export function resolveOAuthPath(
   return path.join(resolveOAuthDir(env, stateDir), OAUTH_FILENAME);
 }
 
+/**
+ * SSGM data directory for event storage.
+ * Can be overridden via gateway.ssgm.dataDir config or SSGM_DATA_DIR env.
+ * Default: ~/.openclaw/ssgm
+ */
+export function resolveSsgmDataDir(
+  dataDirOverride?: string,
+  env: NodeJS.ProcessEnv = process.env,
+  stateDir: string = resolveStateDir(env, os.homedir),
+): string {
+  if (dataDirOverride) {
+    return resolveUserPath(dataDirOverride);
+  }
+  const envOverride = env.SSGM_DATA_DIR?.trim();
+  if (envOverride) {
+    return resolveUserPath(envOverride);
+  }
+  return path.join(stateDir, "ssgm");
+}
+
 export function resolveGatewayPort(
   cfg?: OpenClawConfig,
   env: NodeJS.ProcessEnv = process.env,

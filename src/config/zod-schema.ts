@@ -508,6 +508,15 @@ export const OpenClawSchema = z
           })
           .strict()
           .optional(),
+        ssgm: z
+          .object({
+            enabled: z.boolean().optional(),
+            dataDir: z.string().optional(),
+            redactionEnabled: z.boolean().optional(),
+            redactFileContents: z.boolean().optional(),
+          })
+          .strict()
+          .optional(),
       })
       .strict()
       .optional(),

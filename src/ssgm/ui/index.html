@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSGM Mission Control</title>
+  <link rel="stylesheet" href="/ssgm/static/ssgm.css">
+</head>
+<body>
+  <div id="app">
+    <header class="mission-header">
+      <h1>🎯 SSGM Mission Control</h1>
+      <div class="status-bar">
+        <span id="connection-status" class="status disconnected">Disconnected</span>
+        <span id="safe-mode-indicator" class="status safe-off">Safe Mode: OFF</span>
+        <span id="kill-switch-indicator" class="status kill-off">Kill Switch: OFF</span>
+      </div>
+      <div class="controls">
+        <select id="run-selector">
+          <option value="">Select Run...</option>
+        </select>
+        <button id="safe-mode-toggle" class="btn">Toggle Safe Mode</button>
+        <button id="kill-switch" class="btn btn-danger">KILL SWITCH</button>
+      </div>
+    </header>
+
+    <main class="four-pane">
+      <!-- Panel 1: Chat -->
+      <section class="panel chat-panel">
+        <h2>💬 Chat</h2>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input">
+          <button id="voice-btn" class="btn btn-icon">🎤</button>
+          <input type="text" id="message-input" placeholder="Type message...">
+          <button id="send-btn" class="btn">Send</button>
+          <button id="upload-btn" class="btn btn-icon">📎</button>
+          <button id="camera-btn" class="btn btn-icon">📷</button>
+        </div>
+      </section>
+
+      <!-- Panel 2: Task Graph -->
+      <section class="panel graph-panel">
+        <h2>🕸️ Task Graph</h2>
+        <div id="graph-container" class="graph-container">
+          <svg id="task-graph"></svg>
+        </div>
+      </section>
+
+      <!-- Panel 3: Timeline -->
+      <section class="panel timeline-panel">
+        <h2>📜 Timeline</h2>
+        <div id="timeline-container" class="timeline-container"></div>
+      </section>
+
+      <!-- Panel 4: Workspace -->
+      <section class="panel workspace-panel">
+        <h2>📁 Workspace</h2>
+        <div id="workspace-files" class="workspace-files"></div>
+        <div id="diff-viewer" class="diff-viewer hidden">
+          <h3>Diff</h3>
+          <pre id="diff-content"></pre>
+        </div>
+      </section>
+    </main>
+
+    <!-- Approval Modal -->
+    <div id="approval-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>⚠️ Approval Required</h2>
+        <p id="approval-message"></p>
+        <div class="approval-details">
+          <pre id="approval-details"></pre>
+        </div>
+        <div class="modal-actions">
+          <button id="approve-btn" class="btn btn-success">Approve</button>
+          <button id="deny-btn" class="btn btn-danger">Deny</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/ssgm/static/ssgm.js"></script>
+</body>
+</html>

@@ -44,6 +44,8 @@ import { resolveGatewayClientIp } from "./net.js";
 import { handleOpenAiHttpRequest } from "./openai-http.js";
 import { handleOpenResponsesHttpRequest } from "./openresponses-http.js";
 import { handleToolsInvokeHttpRequest } from "./tools-invoke-http.js";
+import { handleSsgmApiRequest, initEventStore, type SsgmEventStore } from "../ssgm/index.js";
+import { handleWorkspaceApiRequest } from "../ssgm/workspace/index.js";
 
 type SubsystemLogger = ReturnType<typeof createSubsystemLogger>;
 
@@ -286,6 +288,8 @@ export function createGatewayHttpServer(opts: {
   handlePluginRequest?: HooksRequestHandler;
   resolvedAuth: ResolvedGatewayAuth;
   tlsOptions?: TlsOptions;
+  ssgmEnabled?: boolean;
+  ssgmDataDir?: string;
 }): HttpServer {
   const {
     canvasHost,
@@ -299,7 +303,19 @@ export function createGatewayHttpServer(opts: {
     handleHooksRequest,
     handlePluginRequest,
     resolvedAuth,
+    ssgmEnabled,
+    ssgmDataDir,
   } = opts;
+
+  // Initialize SSGM event store if enabled
+  let ssgmStore: SsgmEventStore | null = null;
+  if (ssgmEnabled && ssgmDataDir) {
+    try {
+      ssgmStore = await initEventStore(ssgmDataDir);
+    } catch {
+      // Silently fail - SSGM is optional
+    }
+  }
   const httpServer: HttpServer = opts.tlsOptions
     ? createHttpsServer(opts.tlsOptions, (req, res) => {
         void handleRequest(req, res);
@@ -318,6 +334,22 @@ export function createGatewayHttpServer(opts: {
       const configSnapshot = loadConfig();
       const trustedProxies = configSnapshot.gateway?.trustedProxies ?? [];
       if (await handleHooksRequest(req, res)) {
+        return;
+      }
+      // SSGM API routes (behind feature flag)
+      if (ssgmEnabled && ssgmStore) {
+        const ssgmHandled = await handleSsgmApiRequest(req, res, {
+          store: ssgmStore,
+          auth: resolvedAuth,
+          trustedProxies,
+        });
+        if (ssgmHandled) {
+          return;
+        }
+      }
+      // SSGM Workspace API routes
+      const workspaceHandled = await handleWorkspaceApiRequest(req, res);
+      if (workspaceHandled) {
         return;
       }
       if (
